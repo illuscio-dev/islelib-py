@@ -1,10 +1,13 @@
+.PHONY: install
 install:
 	pip install --no-cache-dir .
 
+.PHONY: install-dev
 install-dev:
 	pip install --upgrade pip
 	pip install --no-cache-dir -e .[dev]
 
+.PHONY: name
 name:
 	$(eval DO_INSTALL := $(python3 ./zdevelop/make_scripts/make_name.py $(n)))
 	sleep 1
@@ -13,9 +16,13 @@ name:
 		pip install --no-cache-dir -e .[dev]
 	endif
 
+.PHONY: version
 version:
 	bumpversion patch
-	python ./zdevelop/make_scripts/make_version.py
+	$(eval VERSION := $(shell python ./zdevelop/make_scripts/make_version.py))
+	git commit -am "auto version update"
+	git tag -a $(VERSION) -m 'version $(VERSION)'
+	git push origin --tags
 
 version-minor:
 	bumpversion minor
@@ -26,17 +33,20 @@ version-major:
 version-reset:
 	bumpversion --new-version 0.0.0 patch
 
+.PHONY: test
 test:
 	-pytest
 	sleep 1
 	open ./zdevelop/tests/_reports/coverage/index.html
 	open ./zdevelop/tests/_reports/test_results.html
 
+.PHONY: lint
 lint:
 	-flake8
 	-black . --diff
 	-mypy .
 
+.PHONY: venv
 venv:
 ifeq ($(py), )
 	$(eval PY_PATH := python3)
@@ -47,18 +57,13 @@ endif
 	@echo "venv created!"
 	@echo "to enter virtual env, run '. ~/.bash_profile', then '$(VENV_PATH)'"
 
+.PHONY: format
 format:
 	-autopep8 --in-place --recursive --aggressive .
 	-black .
 
+.PHONY: doc
 doc:
 	python setup.py build_sphinx -E
 	sleep 1
 	open ./zdocs/build/html/index.html
-
-mock:
-ifeq ($(py), )
-	@echo True
-else
-	@echo False
-endif

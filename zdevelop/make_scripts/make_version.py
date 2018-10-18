@@ -1,3 +1,4 @@
+import sys
 from glob import iglob
 from configparser import ConfigParser
 
@@ -15,3 +16,5 @@ if __name__ == "__main__":
 
     with open(version_file, mode="w") as f:
         f.write(f'__version__ = "{version}"')
+
+    sys.stdout.write(version)
