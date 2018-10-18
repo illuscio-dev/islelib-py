@@ -49,7 +49,7 @@ endif
 
 format:
 	-autopep8 --in-place --recursive --aggressive .
-	-black . --exclude [build/|buck-out/|dist/|_build/|\.git/|\.hg/|\.mypy_cache/|\.nox/|\.tox/|\.venv/\.zdevelop/scratch/]
+	-black .
 
 doc:
 	python setup.py build_sphinx -E
