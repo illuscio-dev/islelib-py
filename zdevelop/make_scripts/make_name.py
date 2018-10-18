@@ -2,7 +2,19 @@ import sys
 import pathlib
 import os
 
-from zdevelop.make_scripts.common import load_cfg, CONFIG_PATH
+from configparser import ConfigParser
+
+CONFIG_PATH = pathlib.Path(__file__).parent.parent.parent / "setup.cfg"
+
+
+def load_cfg() -> ConfigParser:
+    """
+    loads library config file
+    :return: loaded `ConfigParser` object
+    """
+    config = ConfigParser()
+    config.read(CONFIG_PATH)
+    return config
 
 """
 changes name of module in file path file path directory and all relevant config settings

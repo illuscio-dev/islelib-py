@@ -52,10 +52,19 @@ Getting started is easy. Just follow the below steps. Many of these steps includ
 MakeFile scripts that help you get up and running quickly. To run the make commands,
 make sure that the active directory of your terminal session is "islelib-py": ::
 
-   >>> cd /path/to/islelib.py
+   >>> cd /path/to/islelib-py
 
 1. clone islelib-py from gitlab
 --------------------------------
+
+navigate to where you wish to keep your project in terminal: ::
+
+   >>> cd /path/to/local_repository
+   >>> git clone git@gitlab.com:illuscio/islelib-py.git
+
+once the library is cloned, move into it as your active directory: ::
+
+    >>> cd islelib-py
 
 2. pick a name
 --------------
@@ -238,11 +247,18 @@ docstrings. Here is a brief example from a function in one of the make scripts:
 Deploying Your Library
 ======================
 
-1. version:
+1. make commits:
+----------------
+make your commits as you work
+
+2. version:
 -----------
 
 To version up your library, there are a few options depending on what part of the
-``#.#.#`` version number you wish to increment
+``#.#.#`` version number you wish to increment. Islelib uses `bumpversion`_ to handle
+its versioning, and as such, requires a clean commit before versioning up. Bumpverison
+will also add and push gitlab tags upon versioning. Your library must be versioned up
+in order to build. Builds without new versions will be rejected.
 
 * 0.1.0 -> 0.1.1 ::
 
@@ -256,6 +272,17 @@ To version up your library, there are a few options depending on what part of th
 
    >>> make version-major
 
+3. push:
+--------
+
+When you are ready, push your code to gitlab. This will set off a chain of events that
+will:
+
+   * automatically run tests
+   * if tests are passed, automatically build your library to be available to other developers
+   * build new docs on Illuscio's readthedocs page
+
+
 .. web links:
 .. _Black: https://black.readthedocs.io/en/stable/
 .. _Type Hints: https://mypy.readthedocs.io/en/latest/
@@ -267,3 +294,4 @@ To version up your library, there are a few options depending on what part of th
 .. _pytest: https://docs.pytest.org/en/latest/
 .. _Sphinx: http://www.sphinx-doc.org/en/master/
 .. _readthedocs: https://readthedocs.com/
+.. _bumpversion: https://github.com/peritus/bumpversion

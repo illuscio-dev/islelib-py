@@ -9,7 +9,7 @@ install-dev:
 
 .PHONY: name
 name:
-	$(eval DO_INSTALL := $(python3 ./zdevelop/make_scripts/make_name.py $(n)))
+	$(eval DO_INSTALL := $(shell python3 ./zdevelop/make_scripts/make_name.py $(n)))
 	sleep 1
 	cd ../$(n)-py/
 	ifeq (DO_INSTALL, 1)

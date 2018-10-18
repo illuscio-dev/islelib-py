@@ -1,9 +1,20 @@
 import sys
+import pathlib
 from glob import iglob
 from configparser import ConfigParser
 
 
-from zdevelop.make_scripts.common import load_cfg, CONFIG_PATH
+CONFIG_PATH = pathlib.Path(__file__).parent.parent.parent / "setup.cfg"
+
+
+def load_cfg() -> ConfigParser:
+    """
+    loads library config file
+    :return: loaded `ConfigParser` object
+    """
+    config = ConfigParser()
+    config.read(CONFIG_PATH)
+    return config
 
 
 if __name__ == "__main__":
