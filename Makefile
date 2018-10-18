@@ -15,6 +15,7 @@ name:
 
 version:
 	bumpversion patch
+	python ./zdevelop/make_scripts/make_version.py
 
 version-minor:
 	bumpversion minor
