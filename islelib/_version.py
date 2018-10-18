@@ -1,4 +1,8 @@
-from zdevelop.make_scripts.common import load_cfg
+import pathlib
+from configparser import ConfigParser
 
-config = load_cfg()
+CONFIG_PATH = pathlib.Path(__file__).parent.parent / "setup.cfg"
+config = ConfigParser()
+config.read(CONFIG_PATH)
+
 __version__: str = config.get("bumpversion", "current_version")
