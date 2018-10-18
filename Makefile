@@ -25,9 +25,15 @@ version:
 
 version-minor:
 	bumpversion minor
+	sleep 1
+	python3 ./zdevelop/make_scripts/make_version.py
+	git commit -am '_version file update'
 
 version-major:
 	bumpversion major
+	sleep 1
+	python3 ./zdevelop/make_scripts/make_version.py
+	git commit -am '_version file update'
 
 version-reset:
 	bumpversion --new-version 0.0.0 patch
