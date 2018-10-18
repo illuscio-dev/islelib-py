@@ -15,6 +15,6 @@ if __name__ == "__main__":
     version_file = next(iglob(version_path_pattern, recursive=True))
 
     with open(version_file, mode="w") as f:
-        f.write(f'__version__ = "{version}"')
+        f.write(f'__version__ = "{version}"\n')
 
     sys.stdout.write(version)
