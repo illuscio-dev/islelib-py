@@ -19,6 +19,8 @@ name:
 .PHONY: version
 version:
 	bumpversion patch
+	$(eval VERSION := $(shell python ./zdevelop/make_scripts/make_version.py))
+	git commit -am '_version file update'
 
 version-minor:
 	bumpversion minor
