@@ -4,7 +4,7 @@ from configparser import ConfigParser
 """common functions for makefile scripts"""
 
 
-CONFIG_PATH = pathlib.Path(__file__).parent.parent.parent / "setup.cfg"
+CONFIG_PATH: pathlib.Path = pathlib.Path(__file__).parent.parent.parent / "setup.cfg"
 
 
 def load_cfg() -> ConfigParser:
