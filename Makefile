@@ -19,6 +19,7 @@ name:
 .PHONY: version
 version:
 	bumpversion patch
+	sleep 1
 	$(eval VERSION := $(shell python ./zdevelop/make_scripts/make_version.py))
 	git commit -am '_version file update'
 
