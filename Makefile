@@ -20,7 +20,7 @@ name:
 version:
 	bumpversion patch
 	sleep 1
-	$(eval VERSION := $(shell python ./zdevelop/make_scripts/make_version.py))
+	python3 ./zdevelop/make_scripts/make_version.py
 	git commit -am '_version file update'
 
 version-minor:
