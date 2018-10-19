@@ -12,9 +12,9 @@ name:
 	$(eval DO_INSTALL := $(shell python3 ./zdevelop/make_scripts/make_name.py $(n)))
 	sleep 1
 	cd ../$(n)-py/
-	ifeq (DO_INSTALL, 1)
-		pip install --no-cache-dir -e .[dev]
-	endif
+ifeq ($(DO_INSTALL), 1)
+	pip install --no-cache-dir -e .[dev]
+endif
 
 .PHONY: version
 version:

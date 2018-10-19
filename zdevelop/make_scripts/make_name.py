@@ -69,7 +69,7 @@ def main():
     renames lib and writes 1 or 0 to stdout for whether .egg needs to be
     rewritten
     """
-    do_install = 1
+    do_install = "1"
 
     try:
         target_name = sys.argv[1]
@@ -86,7 +86,7 @@ def main():
     try:
         os.remove(f"{old_name}.egg-info")
     except (FileExistsError, OSError):
-        do_install = 0
+        do_install = "0"
 
     # rename directory
     rename_dirs(old_name, target_name)
