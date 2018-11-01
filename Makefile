@@ -16,9 +16,9 @@ name:
 .PHONY: clean
 clean:
 	-rm -r .mypy_cache
-	-rm -r .pytest_cachex
+	-rm -r .pytest_cache
 	-rm -r ./zdocs/build
-	-rm -r *.pyc
+	-find '.' -name '*.pyc' -type f -delete
 	-rm .coverage
 
 
