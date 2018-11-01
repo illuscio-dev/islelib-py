@@ -9,12 +9,18 @@ install-dev:
 
 .PHONY: name
 name:
-	$(eval DO_INSTALL := $(shell python3 ./zdevelop/make_scripts/make_name.py $(n)))
-	sleep 1
-	cd ../$(n)-py/
-ifeq ($(DO_INSTALL), 1)
-	pip install --no-cache-dir -e .[dev]
-endif
+	$(eval PATH_NEW := $(shell python3 ./zdevelop/make_scripts/make_name.py $(n)))
+	@echo "library renamed! to switch your current directory, use the following \
+	command:\ncd '$(PATH_NEW)'"
+
+.PHONY: clean
+clean:
+	-rm -r .mypy_cache
+	-rm -r .pytest_cachex
+	-rm -r ./zdocs/build
+	-rm -r *.pyc
+	-rm .coverage
+
 
 .PHONY: version
 version:
