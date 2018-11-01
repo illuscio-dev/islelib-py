@@ -14,7 +14,7 @@ islelib is Illuscio's python library template. To build your own documentation, 
 start using it. Below we will show some example documentation with the basic functions
 of this library template.
 
-basic useage
+Basic Useage
 ------------
 
    >>> import islelib
@@ -26,6 +26,7 @@ Index
 * :ref:`setting-up`
 * :ref:`writing`
 * :ref:`deploying`
+* :ref:`qol`
 
 Using the islelib Template
 ==========================
@@ -50,11 +51,9 @@ Setting up your Library
 
 Getting started is easy. Just follow the below steps. Many of these steps include
 MakeFile scripts that help you get up and running quickly. To run the make commands,
-make sure that the active directory of your terminal session is "islelib-py": ::
+make sure that the active directory of your terminal session is ``"islelib-py"``
 
-   >>> cd /path/to/islelib-py
-
-1. clone islelib-py from gitlab
+1. Clone islelib-py from Gitlab
 --------------------------------
 
 navigate to where you wish to keep your project in terminal: ::
@@ -66,7 +65,7 @@ once the library is cloned, move into it as your active directory: ::
 
     >>> cd islelib-py
 
-2. pick a name
+2. Pick a Name
 --------------
 
 Illuscio uses the ''isle'' prefix convention (phonetically sounds like I-L/"Aye-EL" as
@@ -74,17 +73,19 @@ opposed to "ill". Examples include ``isle_type``, ``isle_collections``, etc.
 
 When you have chosen a name for your new lib, simple type: ::
 
-   >>> make name n=islelib
+   >>> make name n=libname
+   library renamed! to switch your current directory, use the following	command:
+   cd '/path/to/libname-py'
 
-... where ``islelib`` is the name of your new library. This will:
+... where ``libname`` is the name of your new library. This will:
 
-   * change the name of your main package to ``islelib``
-   * change all of the relevant setup.cfg options to ``islelib``
-   * change the top level folder to ``islelib-py``
+   * change the name of any packages with an __init__ to ``libname`` (uses a find and replace from the old name when applicable).
+   * change all of the relevant setup.cfg options to ``libname``
+   * change the top level folder to ``libname-py``
    * remove old ``islelib.egg`` folder
-   * redo the install-dev command to generate new ``islelib.egg`` if needed
+   * redo the install-dev command to generate new ``libname.egg`` if needed
 
-3. create a virtual environment
+3. Create a Virtual Environment
 --------------------------------
 
 To set up a virtual enviroment through virtualenv, type: ::
@@ -93,33 +94,33 @@ To set up a virtual enviroment through virtualenv, type: ::
 
 This will install a new virtual enviroment at ~/venvs/libname-py-[## python version]
 
-example name: ``islelib-py-37``
+example name: ``libname-py-37``
 
 By default, this command uses your default "python3" alias, but a different version
 can be supplied with a `py=` option: ::
 
    >>> make venv py="/Library/Frameworks/Python.framework/Versions/3.7/bin/python3"
    venv created!
-   to enter virtual env, run '. ~/.bash_profile', then 'env_islelib-37'
+   to enter virtual env, run '. ~/.bash_profile', then 'env_libname-37'
 
 ``make venv`` also registers the enviroment and library directory to your ~/.bash_profile.
 This allows you to easily enter a development enviroment in terminal by typing: ::
 
-   >>> env_islelib-37
+   >>> env_libname-37
 
 ... where `islelib` is the name of your lib and `37` is the python version of the venv.
 This command is equivalent to: ::
 
-   >>> cd /path/to/islelib.py
-   >>> source ~/venvs/islelib-py-37/bin/activate
+   >>> cd /path/to/libname-py
+   >>> source ~/venvs/libname-py-37/bin/activate
 
 In order to use the new alias, you will need to refresh your current terminal session by
 typing: ::
 
    >>> . ~/.bash_profile
 
-4. install the dev environment
--------------------------------
+4. Install the Dev Environment
+------------------------------
 
 Islelib already comes pre-built with all the options and tools needed to write a generic
 library. To install these tools into a python environment, type: ::
@@ -138,7 +139,7 @@ already installed.
 Writing Your Library
 ====================
 
-1. style
+1. Style
 --------
 
 Illuscio's style guide is simple and straightforward:
@@ -159,7 +160,7 @@ From `Black's`_ documentation: ::
    code looks the same regardless of the project you’re reading. Formatting becomes
    transparent after a while and you can focus on the content instead.
 
-2. lint
+2. Lint
 -------
 
 To check the formatting of your library, type: ::
@@ -181,7 +182,7 @@ ints.
 These lint checks are also performed during deployment, and will cause failed code to
 be kept from deploying to production.
 
-3. re-format
+3. Re-format
 ------------
 
 Strict pep8 and black adherence, while useful in many ways to the organization, can be
@@ -200,7 +201,7 @@ This will run the following tools:
 With these tools, keeping your code properly formatted is minimally invasive, and as an
 organization will lead to a more consistent, maintainable codebase.
 
-4. test
+4. Test
 -------
 
 Tests are placed in ``zdevelop/tests``, and use the `pytest`_ library. To run your tests
@@ -222,7 +223,7 @@ an exception granted.
 Likewise, code will be tested upon deployment and kicked back in the case of failures.
 The brief example tests in this library includes a failed test.
 
-5. document
+5. Document
 -----------
 
 islelib uses `Sphinx`_ to create it's documentation. To build docs for your new library,
@@ -247,11 +248,11 @@ docstrings. Here is a brief example from a function in one of the make scripts:
 Deploying Your Library
 ======================
 
-1. make commits:
+1. Make Commits:
 ----------------
-make your commits as you work
+Make your commits as you work
 
-2. version:
+2. Version:
 -----------
 
 To version up your library, there are a few options depending on what part of the
@@ -272,7 +273,11 @@ in order to build. Builds without new versions will be rejected.
 
    >>> make version-major
 
-3. push:
+* 1.0.0 -> 0.0.0 ::
+
+   >>> make version-reset
+
+3. Push:
 --------
 
 When you are ready, push your code to gitlab. This will set off a chain of events that
@@ -281,6 +286,23 @@ will:
    * automatically run tests
    * if tests are passed, automatically build your library to be available to other developers
    * build new docs on Illuscio's readthedocs page
+
+.. _qol:
+
+Other Quality of Life Development Functions
+===========================================
+
+1. Clean Caches
+---------------
+
+``make clean`` will clear the following files from your library:
+
+   * pytest cache
+   * mypy cache
+   * .coverage cache
+   * all .pyc files in the active directory tree
+   * the ``build`` folder in ``./zdevelop/docs``
+
 
 
 .. web links:
