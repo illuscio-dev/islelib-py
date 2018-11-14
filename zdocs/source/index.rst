@@ -53,13 +53,13 @@ Getting started is easy. Just follow the below steps. Many of these steps includ
 MakeFile scripts that help you get up and running quickly. To run the make commands,
 make sure that the active directory of your terminal session is ``"islelib-py"``
 
-1. Clone islelib-py from Gitlab
+1. Clone islelib-py from Github
 --------------------------------
 
 navigate to where you wish to keep your project in terminal: ::
 
    >>> cd /path/to/local_repository
-   >>> git clone git@gitlab.com:illuscio/islelib-py.git
+   >>> git clone git@github.com:bpeake-illuscio/islelib-py.git
 
 once the library is cloned, move into it as your active directory: ::
 
@@ -287,6 +287,41 @@ will:
    * if tests are passed, automatically build your library to be available to other developers
    * build new docs on Illuscio's readthedocs page
 
+4. Build:
+---------
+
+islelib uses `azure_pipelines`_ to automatically run builds, `PyPri`_ for private pip hosting,
+and `readthedocs`_ to host documentation through github webhooks.
+
+Azure Builds
+############
+
+Azure depends on two different branches to run build processes:
+
+   * master
+   * release
+
+When pushing to the ``master`` branch, azure will:
+
+   * lint the library in python 3.6 and 3.7
+   * if linting passes, test the library in the above python versions on linux, mac, and windows
+
+When pushing to the ``release`` branch, azure will also:
+
+   * build sdist and bdist_whls through setuptools
+   * push these builds to PyPri using `twine`_
+
+All builds on azure also tag the github repository with their build number, so builds
+can be easily pulled.
+
+Readthedocs Builds
+##################
+
+Whenever a new commit is made to the ``master`` branch, readthedocs will execute a new
+build of the documentation. This generation happens regardless of whether builds pass
+in Azure, something which should eventually be fixed.
+
+
 .. _qol:
 
 Other Quality of Life Development Functions
@@ -304,6 +339,12 @@ Other Quality of Life Development Functions
    * the ``build`` folder in ``./zdevelop/docs``
 
 
+2. Scratch Folder
+-----------------
+
+The folder ``zdevlop/scratch`` is included in .gitignore, so you can store scratch work
+to do quick tests in this directory without accidentally causing a commit conflict
+
 
 .. web links:
 .. _Black: https://black.readthedocs.io/en/stable/
@@ -317,3 +358,5 @@ Other Quality of Life Development Functions
 .. _Sphinx: http://www.sphinx-doc.org/en/master/
 .. _readthedocs: https://readthedocs.com/
 .. _bumpversion: https://github.com/peritus/bumpversion
+.. _azure_pipelines: https://dev.azure.com/illuscio/Python%20Packages/
+.. _PyPri: https://www.python-private-package-index.com/
