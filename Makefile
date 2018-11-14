@@ -5,7 +5,7 @@ install:
 .PHONY: install-dev
 install-dev:
 	pip install --upgrade pip
-	pip install --no-cache-dir -e .[dev]
+	pip install --no-cache-dir -e .[dev,build,test,lint,doc]
 
 .PHONY: name
 name:
@@ -84,3 +84,15 @@ doc:
 	python setup.py build_sphinx -E
 	sleep 1
 	open ./zdocs/build/html/index.html
+
+.PHONY: publish
+publish:
+	source ~/.bash_profile
+	-rm -r ./build
+	-rm -r ./dist
+	python3 setup.py sdist bdist_wheel
+	twine upload\
+	 --repository-url https://api.python-private-package-index.com/J74C0PU7E/\
+	 --skip-existing\
+	 -u $(PYPRI_USER) \
+	 -p $(PYPRI_PW) dist/*

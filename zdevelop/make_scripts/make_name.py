@@ -133,7 +133,7 @@ def rename_packages(old_name: str, target_name: str) -> None:
     :return:
     """
     # find current lib path - look for the init and ignore zdevelop
-    search_pattern = './*/__init__.py'
+    search_pattern = "./*/__init__.py"
 
     # iterate through init statements in current directory and rename parents
     i = None
@@ -142,7 +142,7 @@ def rename_packages(old_name: str, target_name: str) -> None:
         parent_path: pathlib.Path = pathlib.Path(init_path).parent
         parent_name = parent_path.name
 
-        if parent_name.lower() == 'zdevelop':
+        if parent_name.lower() == "zdevelop":
             continue
 
         # if this lib has multiple packages, we may need to sub-out the name
@@ -166,7 +166,7 @@ def rename_packages(old_name: str, target_name: str) -> None:
             raise this_error
 
     if i is None:
-        raise FileNotFoundError('no packages found in library')
+        raise FileNotFoundError("no packages found in library")
 
 
 def alter_new(script_info: ScriptInfo) -> None:

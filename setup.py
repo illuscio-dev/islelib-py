@@ -13,9 +13,10 @@ if __name__ == "__main__":
     config.read("./setup.cfg")
 
     lib_name = config.get("metadata", "name")
+    version = config.get("bumpversion", "current_version")
 
     # filter packages to ones with the lib name in them
     packages: List[str] = [p for p in find_packages() if p.startswith(lib_name)]
 
     # run setup
-    setup(packages=packages)
+    setup(version=version, packages=packages)

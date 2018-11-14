@@ -1,0 +1,177 @@
+# Python package
+# Create and test a Python package on multiple Python versions.
+# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/python
+
+name: build_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+      - release
+      - test
+    exclude:
+      - build_*
+
+jobs:
+
+- job: 'Lint'
+  pool:
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+    maxParallel: 4
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+      architecture: 'x64'
+
+  - script: python -m pip install --upgrade pip && pip install --no-cache-dir -e .[lint]
+    displayName: 'Install dependencies'
+
+  - script: |
+      flake8
+    displayName: 'lint (flake8)'
+
+  - script: |
+      black . --check
+    displayName: 'lint (black)'
+
+  - script: |
+      mypy .
+    displayName: 'type checking (mypy)'
+
+- job: 'Test_Linux'
+  dependsOn: 'Lint'
+
+  pool:
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+    maxParallel: 4
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+      architecture: 'x64'
+
+  - script: python -m pip install --upgrade pip && pip install --no-cache-dir -e .[test]
+    displayName: 'Install dependencies'
+
+  - script: |
+      pip install pytest
+      pytest --doctest-modules --junitxml=junit/test-results.xml
+    displayName: 'pytest'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/test-results.xml'
+      testRunTitle: 'Python $(python.version)'
+    condition: succeededOrFailed()
+
+- job: 'Test_Mac'
+  dependsOn: 'Test_Linux'
+
+  pool:
+    vmImage: 'macOS-10.13'
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+    maxParallel: 4
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+      architecture: 'x64'
+
+  - script: python -m pip install --upgrade pip && pip install --no-cache-dir -e .[test]
+    displayName: 'Install dependencies'
+
+  - script: |
+      pip install pytest
+      pytest --doctest-modules --junitxml=junit/test-results.xml
+    displayName: 'pytest'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/test-results.xml'
+      testRunTitle: 'Python $(python.version)'
+    condition: succeededOrFailed()
+
+- job: 'Test_Win'
+  dependsOn: 'Test_Mac'
+
+  pool:
+    vmImage: 'vs2017-win2016'
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+    maxParallel: 4
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+      architecture: 'x64'
+
+  # currently pip does not correctly install extras on windows for python 3.6
+  - script: |
+      python -m pip install --upgrade pip
+      pip install -e .
+      pip install pytest
+      pip install pytest-sugar
+      pip install pytest-cov
+      pip install pytest-html
+    displayName: 'Install dependencies'
+
+  - script: |
+      pytest --doctest-modules --junitxml=junit/test-results.xml
+    displayName: 'pytest'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/test-results.xml'
+      testRunTitle: 'Python $(python.version)'
+    condition: succeededOrFailed()
+
+- job: 'Publish'
+  dependsOn: 'Test_Win'
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/release')
+
+  pool:
+    vmImage: 'Ubuntu 16.04'
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      architecture: 'x64'
+
+  - script: python -m pip install --upgrade pip wheel setuptools && pip install --no-cache-dir -e .[build]
+    displayName: 'Install dependencies'
+
+  - script: python3 setup.py sdist bdist_wheel
+    displayName: 'Build package'
+
+  - script: twine upload --repository-url https://api.python-private-package-index.com/J74C0PU7E/ --skip-existing -u $(PYPRI_USER) -p $(PYPRI_PW) dist/*
+    displayName: 'Upload package'
