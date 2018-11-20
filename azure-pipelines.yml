@@ -18,6 +18,7 @@ trigger:
 jobs:
 
 - job: 'Lint'
+
   pool:
     vmImage: 'ubuntu-16.04'
   strategy:
@@ -33,6 +34,8 @@ jobs:
     inputs:
       versionSpec: '$(python.version)'
       architecture: 'x64'
+
+  - template: zdevelop/azure_templates/install_pip_configs.yml
 
   - script: python -m pip install --upgrade pip && pip install --no-cache-dir -e .[lint]
     displayName: 'Install dependencies'
@@ -49,114 +52,29 @@ jobs:
       mypy .
     displayName: 'type checking (mypy)'
 
-- job: 'Test_Linux'
-  dependsOn: 'Lint'
-
-  pool:
+- template: zdevelop/azure_templates/run_tests.yml
+  parameters:
+    name: 'Test_Linux'
     vmImage: 'ubuntu-16.04'
-  strategy:
-    matrix:
-      Python36:
-        python.version: '3.6'
-      Python37:
-        python.version: '3.7'
-    maxParallel: 4
+    dependsOn: 'Lint'
+    pipSettingsScript: install_pip_configs.yml
 
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '$(python.version)'
-      architecture: 'x64'
-
-  - script: python -m pip install --upgrade pip && pip install --no-cache-dir -e .[test]
-    displayName: 'Install dependencies'
-
-  - script: |
-      pip install pytest
-      pytest --doctest-modules --junitxml=junit/test-results.xml
-    displayName: 'pytest'
-
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '**/test-results.xml'
-      testRunTitle: 'Python $(python.version)'
-    condition: succeededOrFailed()
-
-- job: 'Test_Mac'
-  dependsOn: 'Test_Linux'
-
-  pool:
+- template: zdevelop/azure_templates/run_tests.yml
+  parameters:
+    name: 'Test_Mac'
     vmImage: 'macOS-10.13'
-  strategy:
-    matrix:
-      Python36:
-        python.version: '3.6'
-      Python37:
-        python.version: '3.7'
-    maxParallel: 4
+    dependsOn: 'Test_Linux'
+    pipSettingsScript: install_pip_configs.yml
 
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '$(python.version)'
-      architecture: 'x64'
-
-  - script: python -m pip install --upgrade pip && pip install --no-cache-dir -e .[test]
-    displayName: 'Install dependencies'
-
-  - script: |
-      pip install pytest
-      pytest --doctest-modules --junitxml=junit/test-results.xml
-    displayName: 'pytest'
-
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '**/test-results.xml'
-      testRunTitle: 'Python $(python.version)'
-    condition: succeededOrFailed()
-
-- job: 'Test_Win'
-  dependsOn: 'Test_Mac'
-
-  pool:
+- template: zdevelop/azure_templates/run_tests.yml
+  parameters:
+    name: 'Test_Win'
     vmImage: 'vs2017-win2016'
-  strategy:
-    matrix:
-      Python36:
-        python.version: '3.6'
-      Python37:
-        python.version: '3.7'
-    maxParallel: 4
-
-  steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '$(python.version)'
-      architecture: 'x64'
-
-  # currently pip does not correctly install extras on windows for python 3.6
-  - script: |
-      python -m pip install --upgrade pip
-      pip install -e .
-      pip install pytest
-      pip install pytest-sugar
-      pip install pytest-cov
-      pip install pytest-html
-    displayName: 'Install dependencies'
-
-  - script: |
-      pytest --doctest-modules --junitxml=junit/test-results.xml
-    displayName: 'pytest'
-
-  - task: PublishTestResults@2
-    inputs:
-      testResultsFiles: '**/test-results.xml'
-      testRunTitle: 'Python $(python.version)'
-    condition: succeededOrFailed()
+    dependsOn: 'Test_Mac'
+    pipSettingsScript: install_pip_configs_win.yml
 
 - job: 'Publish'
   dependsOn: 'Test_Win'
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/release')
 
   pool:
     vmImage: 'Ubuntu 16.04'
@@ -167,11 +85,20 @@ jobs:
       versionSpec: '3.x'
       architecture: 'x64'
 
+  - template: zdevelop/azure_templates/install_pip_configs.yml
+
   - script: python -m pip install --upgrade pip wheel setuptools && pip install --no-cache-dir -e .[build]
     displayName: 'Install dependencies'
+
+  - task: PythonScript@0
+    displayName: 'check for version conflict'
+    inputs:
+      scriptSource: filePath
+      scriptPath: 'zdevelop/azure_scripts/check_version.py'
+      failOnStderr: true
 
   - script: python3 setup.py sdist bdist_wheel
     displayName: 'Build package'
 
-  - script: twine upload --repository-url https://api.python-private-package-index.com/J74C0PU7E/ --skip-existing -u $(PYPRI_USER) -p $(PYPRI_PW) dist/*
+  - script: twine upload -r isle_pypi_libs dist/*
     displayName: 'Upload package'

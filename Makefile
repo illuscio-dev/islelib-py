@@ -91,8 +91,4 @@ publish:
 	-rm -r ./build
 	-rm -r ./dist
 	python3 setup.py sdist bdist_wheel
-	twine upload\
-	 --repository-url https://api.python-private-package-index.com/J74C0PU7E/\
-	 --skip-existing\
-	 -u $(PYPRI_USER) \
-	 -p $(PYPRI_PW) dist/*
+	twine upload -r isle_pypi_libs dist/*
