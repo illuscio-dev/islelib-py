@@ -10,9 +10,9 @@ islelib-py
    :maxdepth: 2
    :caption: Contents:
 
-islelib is Illuscio's python library template. To build your own documentation, simply
-start using it. Below we will show some example documentation with the basic functions
-of this library template.
+``islelib`` is Illuscio's python library template. To build your own documentation,
+simply start using it. Below we will show some example documentation with the basic
+functions of this library template.
 
 Basic Useage
 ------------
@@ -32,7 +32,7 @@ Using the islelib Template
 ==========================
 
 Islelib comes with a number of pre-built quality-of-life macros for developers so they
-can code more and manage less, most of which are accessed through make commands.
+can code more and manage less, most of which are accessed through ``make`` commands.
 
 In addition to your lib's package folder, islelib has two other main directories:
 
@@ -41,17 +41,20 @@ In addition to your lib's package folder, islelib has two other main directories
 
 In addition, the following files are used:
 
+   * ``./README.md`` - brief description and pointer to doc link for `Github`_
    * ``./setup.cfg`` - when possible, settings for all tools are stored here
-   * ``./Makefile`` - contains make commands for the suite of tools detailed in this doc
+   * ``./Makefile`` - contains make commands for the development features detailed in this doc
+   * ``./azure_pipelines.yml`` - build process definition for `Azure Pipelines`_
+   * ``./readthedocs.yml`` - config file for `readthedocs`_ documentation builds
 
 .. _setting-up:
 
 Setting up your Library
 =======================
 
-Getting started is easy. Just follow the below steps. Many of these steps include
-MakeFile scripts that help you get up and running quickly. To run the make commands,
-make sure that the active directory of your terminal session is ``"islelib-py"``
+Getting started is easy, just follow the below steps. Many of these steps include
+``Make`` scripts that help you get up and running quickly. To run the ``Make`` commands,
+ensure that the active directory of your terminal session is ``"islelib-py"``
 
 1. Clone islelib-py from Github
 --------------------------------
@@ -71,7 +74,7 @@ once the library is cloned, move into it as your active directory: ::
 Illuscio uses the ''isle'' prefix convention (phonetically sounds like I-L/"Aye-EL" as
 opposed to "ill". Examples include ``isle_type``, ``isle_collections``, etc.
 
-When you have chosen a name for your new lib, simple type: ::
+When you have chosen a name for your new lib, simply type: ::
 
    >>> make name n=libname
    library renamed! to switch your current directory, use the following	command:
@@ -83,32 +86,41 @@ When you have chosen a name for your new lib, simple type: ::
    * change all of the relevant setup.cfg options to ``libname``
    * change the top level folder to ``libname-py``
    * remove old ``islelib.egg`` folder
-   * redo the install-dev command to generate new ``libname.egg`` if needed
 
-3. Create a Virtual Environment
+3. Pick a Description
+---------------------
+
+In the ``./setup.cfg`` file, under the ``[metadata]`` header, change the ``description``
+field to a brief description of your project. This is the description that will appear
+on builds in Illuscio's `Python Azure Artifacts Feed`_ (pypi package repository).
+This description can be changed at any time.
+
+4. Create a Virtual Environment
 --------------------------------
 
 To set up a virtual enviroment through virtualenv, type: ::
 
    >>> make venv
 
-This will install a new virtual enviroment at ~/venvs/libname-py-[## python version]
+This will install a new virtual enviroment at ``~/venvs/[libname]-py-[## python version]``.
 
-example name: ``libname-py-37``
+Example name: ``libname-py-37``
 
-By default, this command uses your default "python3" alias, but a different version
+By default, this command uses your current "python3" alias, but a different version
 can be supplied with a `py=` option: ::
 
    >>> make venv py="/Library/Frameworks/Python.framework/Versions/3.7/bin/python3"
-   venv created!
-   to enter virtual env, run '. ~/.bash_profile', then 'env_libname-37'
+   venv created! To enter virtual env, run :
+   . ~/.bash_profile
+   then run:
+   env_libname-37
 
 ``make venv`` also registers the enviroment and library directory to your ~/.bash_profile.
 This allows you to easily enter a development enviroment in terminal by typing: ::
 
    >>> env_libname-37
 
-... where `islelib` is the name of your lib and `37` is the python version of the venv.
+... where `libname` is the name of your lib and `37` is the python version of the venv.
 This command is equivalent to: ::
 
    >>> cd /path/to/libname-py
@@ -119,10 +131,10 @@ typing: ::
 
    >>> . ~/.bash_profile
 
-4. Install the Dev Environment
+5. Install the Dev Environment
 ------------------------------
 
-Islelib already comes pre-built with all the options and tools needed to write a generic
+islelib already comes pre-built with all the options and tools needed to write a generic
 library. To install these tools into a python environment, type: ::
 
    >>> make install-dev
@@ -160,6 +172,10 @@ From `Black's`_ documentation: ::
    code looks the same regardless of the project you’re reading. Formatting becomes
    transparent after a while and you can focus on the content instead.
 
+Black sits at the top of the hierarchy. For instance, black suggests line lengths do not
+exceed 88 characters, where the default pep8 recommendation is 79. Illuscio code should
+conform to the Black preference of 88 characters.
+
 2. Lint
 -------
 
@@ -173,11 +189,11 @@ This will run the following tools to tell you where adjustments need to be made:
    * `Black`_ (checking mode)
    * `MyPy`_
 
-``flake8`` and ``Black`` will both check your formatting and report any instances where
-code does not conform to their respective standards. ``Mypy`` is a type checker and
+`flake8`_ and `Black`_ will both check your formatting and report any instances where
+code does not conform to their respective standards. `Mypy`_ is a type checker and
 reports instances where typing has been omitted or where type errors are detected,
 which can help reduce bugs (ex: passing a known str to a function that only handles
-ints.
+ints).
 
 These lint checks are also performed during deployment, and will cause failed code to
 be kept from deploying to production.
@@ -185,9 +201,9 @@ be kept from deploying to production.
 3. Re-format
 ------------
 
-Strict pep8 and black adherence, while useful in many ways to the organization, can be
-annoying and distracting to individual engineers. To help with this the islelib template
-comes with tools to re-format your code for you.
+Strict pep8 and Black adherence, while useful in many ways to the organization, can be
+annoying and distracting to individual engineers. To help with this, the islelib
+template comes with tools to re-format your code for you.
 
 To re-format your code, type: ::
 
@@ -211,7 +227,8 @@ type: ::
 
 ... and watch the magic happen. This macro also creates coverage and error reports.
 Coverage reports show what percentage of each file's code is tested. These reports can
-be found in the following locations:
+be found in the following locations, and will be automatically opened in your default
+browser once the tests complete:
 
    * results: ``zdevelop/tests/_reports/test_results.html``
    * coverage: ``zdevelop/tests/_reports/coverage/index.html``
@@ -238,7 +255,7 @@ few specific sphinx plugins to:
    * automatically annotate types - types DO NOT need to be written in docstring to generate type annotations.
    * style docs with `readthedocs`_ theme
 
-Sphinx offers a number of convenience features for auto-documenting code from
+`Sphinx`_ offers a number of convenience features for auto-documenting code from
 docstrings. Here is a brief example from a function in one of the make scripts:
 
 .. autofunction:: zdevelop.make_scripts.make_name.edit_cfg
@@ -280,18 +297,23 @@ in order to build. Builds without new versions will be rejected.
 3. Push:
 --------
 
-When you are ready, push your code to gitlab. This will set off a chain of events that
+When you are ready, push your code to github. This will set off a chain of events that
 will:
 
-   * automatically run tests
-   * if tests are passed, automatically build your library to be available to other developers
+   * automatically run formatting and unit tests
+   * if tests are passed, build and push your library to be available to other developers
    * build new docs on Illuscio's readthedocs page
 
 4. Build:
 ---------
 
-islelib uses `azure_pipelines`_ to automatically run builds, `PyPri`_ for private pip hosting,
-and `readthedocs`_ to host documentation through github webhooks.
+islelib uses `Azure Pipelines`_ to automatically run builds, `Azure Artifacts`_ for
+private pypi package hosting, and `readthedocs`_ to host documentation through github
+webhooks.
+
+Link: Illuscio `Python Package Pipeline`_ dashboard
+Link: Illuscio `Python Azure Artifacts Feed`_
+Link: Illuscio `readthedocs page`_
 
 Azure Builds
 ############
@@ -303,13 +325,15 @@ Azure depends on two different branches to run build processes:
 
 When pushing to the ``master`` branch, azure will:
 
-   * lint the library in python 3.6 and 3.7
-   * if linting passes, test the library in the above python versions on linux, mac, and windows
+   * Lint the library in python 3.6 and 3.7. If `black`_, `mypy`_ or `flake8`_ throw an error, the build will fail.
+   * Test the library in the above python versions on linux, mac, and windows using `pytest`_. Any failed tests will halt the build.
+   * Check that test coverage exceeds 85%. If not, the build will fail.
 
-When pushing to the ``release`` branch, azure will also:
+When pushing to the ``release`` branch, azure will do the above, then also:
 
-   * build sdist and bdist_whls through setuptools
-   * push these builds to PyPri using `twine`_
+   * Build sdist and bdist_whl's through setuptools
+   * Check that the version of library does not already exist in the `Python Azure Artifacts Feed`_. If it does, the build will fail.
+   * Push these builds to illuscio's `Python Azure Artifacts Feed`_ using `twine`_.
 
 All builds on azure also tag the github repository with their build number, so builds
 can be easily pulled.
@@ -317,10 +341,9 @@ can be easily pulled.
 Readthedocs Builds
 ##################
 
-Whenever a new commit is made to the ``master`` branch, readthedocs will execute a new
-build of the documentation. This generation happens regardless of whether builds pass
-in Azure, something which should eventually be fixed.
-
+Whenever a new commit is made to the ``master`` branch, `readthedocs`_ will execute a
+new build of the documentation. This generation happens regardless of whether builds
+pass in Azure, something which should eventually be fixed.
 
 .. _qol:
 
@@ -335,6 +358,8 @@ Other Quality of Life Development Functions
    * pytest cache
    * mypy cache
    * .coverage cache
+   * ./build directory
+   * ./dist directory
    * all .pyc files in the active directory tree
    * the ``build`` folder in ``./zdevelop/docs``
 
@@ -342,11 +367,12 @@ Other Quality of Life Development Functions
 2. Scratch Folder
 -----------------
 
-The folder ``zdevlop/scratch`` is included in .gitignore, so you can store scratch work
+The folder ``zdevelop/scratch`` is included in .gitignore, so you can store scratch work
 to do quick tests in this directory without accidentally causing a commit conflict
 
 
 .. web links:
+.. _Github: https://github.com/
 .. _Black: https://black.readthedocs.io/en/stable/
 .. _Type Hints: https://mypy.readthedocs.io/en/latest/
 .. _Pep8: https://www.python.org/dev/peps/pep-0008/?
@@ -358,5 +384,10 @@ to do quick tests in this directory without accidentally causing a commit confli
 .. _Sphinx: http://www.sphinx-doc.org/en/master/
 .. _readthedocs: https://readthedocs.com/
 .. _bumpversion: https://github.com/peritus/bumpversion
-.. _azure_pipelines: https://dev.azure.com/illuscio/Python%20Packages/
+.. _Azure Pipelines: https://azure.microsoft.com/en-us/services/devops/pipelines/
 .. _PyPri: https://www.python-private-package-index.com/
+.. _Azure Artifacts: https://azure.microsoft.com/en-us/services/devops/artifacts/
+.. _Python Azure Artifacts Feed: https://dev.azure.com/illuscio/Python%20Packages/_packaging?_a=feed&feed=isle_pypi_libs
+.. _Python Package Pipeline: https://dev.azure.com/illuscio/Python%20Packages/_build?definitionId=1
+.. _readthedocs page: https://readthedocs.com/dashboard/
+.. _twine: https://twine.readthedocs.io/en/latest/

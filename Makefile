@@ -18,6 +18,8 @@ clean:
 	-rm -r .mypy_cache
 	-rm -r .pytest_cache
 	-rm -r ./zdocs/build
+	-rm -r ./build
+	-rm -r ./dist
 	-find '.' -name '*.pyc' -type f -delete
 	-rm .coverage
 
@@ -71,8 +73,10 @@ else
 	$(eval PY_PATH := $(py))
 endif
 	$(eval VENV_PATH := $(shell $(PY_PATH) ./zdevelop/make_scripts/make_venv.py))
-	@echo "venv created!"
-	@echo "to enter virtual env, run '. ~/.bash_profile', then '$(VENV_PATH)'"
+	@echo "venv created! To enter virtual env, run:"
+	@echo ". ~/.bash_profile"
+	@echo "then run:"
+	@echo "$(VENV_PATH)"
 
 .PHONY: format
 format:
