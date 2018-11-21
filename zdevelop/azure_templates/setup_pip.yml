@@ -19,3 +19,8 @@ steps:
     mv $(Agent.TempDirectory)/pip.conf ~/.config/pip/pip.conf
     mv $(Agent.TempDirectory)/.pypirc ~/.pypirc
   displayName: 'move pip credentials'
+
+- script: |
+    python -m pip install --upgrade pip
+    pip install --upgrade setuptools
+  displayName: 'Upgrade pip and setuptools'

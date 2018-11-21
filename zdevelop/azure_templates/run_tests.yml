@@ -2,7 +2,7 @@ parameters:
   name: ''
   vmImage: ''
   dependsOn: ''
-  pipSettingsScript: install_pip_configs.yml
+  pipSettingsScript: setup_pip.yml
 
 jobs:
 
@@ -29,12 +29,7 @@ jobs:
 
   # currently pip does not correctly install extras on windows for python 3.6
   - script: |
-      python -m pip install --upgrade pip
-      pip install -e .
-      pip install pytest
-      pip install pytest-sugar
-      pip install pytest-cov
-      pip install pytest-html
+      pip install -e .[test]
     displayName: 'Install dependencies'
 
   - script: |
