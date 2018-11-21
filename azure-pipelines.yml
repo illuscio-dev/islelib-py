@@ -75,6 +75,7 @@ jobs:
 
 - job: 'Publish'
   dependsOn: 'Test_Win'
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/release')
 
   pool:
     vmImage: 'Ubuntu 16.04'
