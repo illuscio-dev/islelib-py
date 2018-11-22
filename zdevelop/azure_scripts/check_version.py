@@ -36,8 +36,8 @@ if __name__ == "__main__":
         ).communicate()[1]
     )
 
-    if 'could not find a version' not in pip_response.lower():
-        error_message = 'pip response unknown\n'
+    if "could not find a version" not in pip_response.lower():
+        error_message = "pip response unknown\n"
         print(error_message)
         sys.stderr.write(error_message)
 
