@@ -29,7 +29,7 @@ Index
 * :ref:`qol`
 
 Using the islelib Template
-==========================
+`
 
 Islelib comes with a number of pre-built quality-of-life macros for developers so they
 can code more and manage less, most of which are accessed through ``make`` commands.

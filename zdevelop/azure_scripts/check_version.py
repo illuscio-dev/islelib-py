@@ -36,9 +36,18 @@ if __name__ == "__main__":
         ).communicate()[1]
     )
 
+    if 'could not find a version' not in pip_response.lower():
+        error_message = 'pip response unknown\n'
+        print(error_message)
+        sys.stderr.write(error_message)
+
     versions_pattern = re.compile(r"\(from versions: (.+)\)")  # noqa: W605
 
-    existing_versions: str = re.findall(versions_pattern, pip_response)[0]
+    try:
+        existing_versions: str = re.findall(versions_pattern, pip_response)[0]
+    except IndexError:
+        exit()
+
     existing_versions: List[str] = existing_versions.split(", ")
 
     try:
