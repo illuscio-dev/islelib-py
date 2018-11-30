@@ -339,18 +339,16 @@ Link: Illuscio `readthedocs page`_
 Azure Builds
 ############
 
-Azure depends on two different branches to run build processes:
+Azure builds will only run on commits to the ``master`` branch or branches made with
+Pull Requests.
 
-   * master
-   * release
-
-When pushing to the ``master`` branch, azure will:
+When pushing to any applicable branch, Azure Pipelines will:
 
    * Lint the library in python 3.6 and 3.7. If `black`_, `mypy`_ or `flake8`_ throw an error, the build will fail.
    * Test the library in the above python versions on linux, mac, and windows using `pytest`_. Any failed tests will halt the build.
    * Check that test coverage exceeds 85%. If not, the build will fail.
 
-When pushing to the ``release`` branch, azure will do the above, then also:
+When pushing to the ``master`` branch, azure will do the above, then also:
 
    * Build sdist and bdist_whl's through setuptools
    * Check that the version of library does not already exist in the `Python Azure Artifacts Feed`_. If it does, the build will fail.
