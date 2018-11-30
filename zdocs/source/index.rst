@@ -14,22 +14,22 @@ islelib-py
 simply start using it. Below we will show some example documentation with the basic
 functions of this library template.
 
-Basic Useage
-------------
+Table of Contents
+=================
 
-   >>> import islelib
-   [basic useage example goes here]
-
-Index
------
-
+* :ref:`basic-usage`
 * :ref:`setting-up`
 * :ref:`writing`
 * :ref:`deploying`
 * :ref:`qol`
 
-Using the islelib Template
-`
+.. _basic-usage:
+
+Basic Useage
+============
+
+   >>> import islelib
+   [basic useage example goes here]
 
 Islelib comes with a number of pre-built quality-of-life macros for developers so they
 can code more and manage less, most of which are accessed through ``make`` commands.
@@ -145,6 +145,27 @@ library.
 You will need to have Make installed on your machine. For OSX, you will be prompted
 to install make through XCode when you attempt to run this command if it is not
 already installed.
+
+6. Initialize a new git repo
+----------------------------
+
+You should delete the existing ``.git`` folder for the repository, then initialize a
+clean repo by typing: ::
+
+   >>> git init
+
+In the future, you may wish to cherry-pick commits / updates to this template into
+your own libraries. A guide for how to do that can be found here:
+
+[Guide needs to be written]
+
+7. Register your library
+------------------------
+
+Please reference the relevant documentation for registering your library in Github,
+Readthedocs, Azure Pipelines, etc. Links to relevant guides can be found below:
+
+[Guides need to be written]
 
 .. _writing:
 
