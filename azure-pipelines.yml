@@ -15,6 +15,29 @@ trigger:
 
 jobs:
 
+- job: 'Check Version'
+
+  pool:
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    python.version: '3.7'
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      architecture: 'x64'
+
+  - script: pip install --no-cache-dir -e .[build]
+    displayName: 'Install dependencies'
+
+  - task: PythonScript@0
+    displayName: 'check for version conflict'
+    inputs:
+      scriptSource: filePath
+      scriptPath: 'zdevelop/azure_scripts/check_version.py'
+      failOnStderr: true
+
 - job: 'Lint'
 
   pool:
