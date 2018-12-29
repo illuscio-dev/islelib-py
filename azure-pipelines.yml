@@ -15,18 +15,19 @@ trigger:
 
 jobs:
 
-- job: 'Check Version'
+- job: 'Check_Version'
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
 
   pool:
     vmImage: 'ubuntu-16.04'
-  strategy:
-    python.version: '3.7'
 
   steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.x'
+      versionSpec: '3.7'
       architecture: 'x64'
+
+  - template: zdevelop/azure_templates/setup_pip.yml
 
   - script: pip install --no-cache-dir -e .[build]
     displayName: 'Install dependencies'
@@ -39,6 +40,7 @@ jobs:
       failOnStderr: true
 
 - job: 'Lint'
+  dependsOn: 'Check_Version'
 
   pool:
     vmImage: 'ubuntu-16.04'
