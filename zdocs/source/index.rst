@@ -25,8 +25,8 @@ Table of Contents
 
 .. _basic-usage:
 
-Basic Useage
-============
+Basic Usage
+===========
 
    >>> import islelib
    [basic useage example goes here]
