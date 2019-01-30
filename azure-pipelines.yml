@@ -10,11 +10,13 @@ trigger:
   branches:
     include:
       - master
+      - pre_release
     exclude:
       - build_*
 
 pr:
   - master
+  - pre_release
 
 jobs:
 
