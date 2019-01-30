@@ -13,6 +13,9 @@ trigger:
     exclude:
       - build_*
 
+pr:
+  - master
+
 jobs:
 
 - job: 'Check_Version'
@@ -41,6 +44,7 @@ jobs:
 
 - job: 'Lint'
   dependsOn: 'Check_Version'
+  condition: or(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   pool:
     vmImage: 'ubuntu-16.04'
@@ -77,9 +81,16 @@ jobs:
 
 - template: zdevelop/azure_templates/run_tests.yml
   parameters:
+    name: 'Test_Win'
+    vmImage: 'vs2017-win2016'
+    dependsOn: 'Lint'
+    pipSettingsScript: setup_pip_win.yml
+
+- template: zdevelop/azure_templates/run_tests.yml
+  parameters:
     name: 'Test_Linux'
     vmImage: 'ubuntu-16.04'
-    dependsOn: 'Lint'
+    dependsOn: 'Test_Win'
     pipSettingsScript: setup_pip.yml
 
 - template: zdevelop/azure_templates/run_tests.yml
@@ -89,15 +100,8 @@ jobs:
     dependsOn: 'Test_Linux'
     pipSettingsScript: setup_pip.yml
 
-- template: zdevelop/azure_templates/run_tests.yml
-  parameters:
-    name: 'Test_Win'
-    vmImage: 'vs2017-win2016'
-    dependsOn: 'Test_Mac'
-    pipSettingsScript: setup_pip_win.yml
-
 - job: 'Publish'
-  dependsOn: 'Test_Win'
+  dependsOn: 'Test_Mac'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 
   pool:
