@@ -29,6 +29,8 @@ version = __version__
 
 # -- General configuration ---------------------------------------------------
 
+add_module_names = False
+
 # If your documentation needs a minimal Sphinx version, state it here.
 #
 # needs_sphinx = '1.0'
