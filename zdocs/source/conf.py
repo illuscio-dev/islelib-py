@@ -188,3 +188,8 @@ intersphinx_mapping = {"https://zdocs.python.org/": None}
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+# Autodoc Options
+add_module_names = False
+autoclass_content = "both"
+autodoc_member_order = "groupwise"
