@@ -16,6 +16,7 @@ develop-eggs/
 # library scratch
 .coverage
 zdevelop/tests/_reports/
+zdevelop/tests/htmlcov/
 zdevelop/scratch/*
 
 # venvs
