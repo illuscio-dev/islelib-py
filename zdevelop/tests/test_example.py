@@ -1,6 +1,6 @@
+from islelib import __version__
+
+
 def test_example(example_fixture: int) -> None:
-    assert example_fixture == 1
+    assert __version__ != ""
 
-
-def test_example_failure() -> None:
-    assert 1 == 2

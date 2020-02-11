@@ -24,35 +24,6 @@ clean:
 	-rm .coverage
 	-rm -r .idea
 
-
-.PHONY: version
-version:
-	bumpversion patch
-	sleep 1
-	python3 ./zdevelop/make_scripts/make_version.py
-	git commit -am '_version file update'
-
-.PHONY: version-minor
-version-minor:
-	bumpversion minor
-	sleep 1
-	python3 ./zdevelop/make_scripts/make_version.py
-	git commit -am '_version file update'
-
-.PHONY: version-major
-version-major:
-	bumpversion major
-	sleep 1
-	python3 ./zdevelop/make_scripts/make_version.py
-	git commit -am '_version file update'
-
-.PHONY: version-reset
-version-reset:
-	bumpversion --new-version 0.0.0 patch
-	sleep 1
-	python3 ./zdevelop/make_scripts/make_version.py
-	git commit -am '_version file update'
-
 .PHONY: test
 test:
 	-pytest

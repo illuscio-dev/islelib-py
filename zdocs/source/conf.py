@@ -1,4 +1,13 @@
-from islelib import __version__
+import configparser
+import pathlib
+
+config_path = pathlib.Path(__file__).parent.parent.parent / "setup.cfg"
+config = configparser.ConfigParser()
+config.read(str(config_path))
+
+__version__ = config.get("version", "release")
+if not __version__:
+    __version__ = config.get("version", "target")
 
 # -*- coding: utf-8 -*-
 #
@@ -132,7 +141,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "islelib.tex", "islelib Documentation", "Billy PeAKE", "manual")
+    (master_doc, "islelib.tex", "islelib Documentation", "Billy Peake", "manual")
 ]
 
 

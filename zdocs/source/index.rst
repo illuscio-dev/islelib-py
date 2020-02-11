@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 islelib-py
-===================================
+==========
 
 .. toctree::
    :maxdepth: 2
@@ -45,7 +45,6 @@ In addition, the following files are used:
    * ``./setup.cfg`` - when possible, settings for all tools are stored here
    * ``./Makefile`` - contains make commands for the development features detailed in this doc
    * ``./azure_pipelines.yml`` - build process definition for `Azure Pipelines`_
-   * ``./readthedocs.yml`` - config file for `readthedocs`_ documentation builds
 
 .. _setting-up:
 
@@ -288,32 +287,22 @@ Deploying Your Library
 
 1. Make Commits:
 ----------------
-Make your commits as you work
+Make your commits as you work. Your commits / PRs will be made to the ``dev`` branch,
+changes are pushed to master automatically once builds are passed. This ensures that
+source code pulled form master is always quasi-stable.
 
 2. Version:
 -----------
 
-To version up your library, there are a few options depending on what part of the
-``#.#.#`` version number you wish to increment. Islelib uses `bumpversion`_ to handle
-its versioning, and as such, requires a clean commit before versioning up. Bumpverison
-will also add and push gitlab tags upon versioning. Your library must be versioned up
-in order to build. Builds without new versions will be rejected.
+The major / minor version of the library are set in the ``setup.cfg`` file under
+``version:target``.
 
-* 0.1.0 -> 0.1.1 ::
+Patch versions are generated automatically by the build system. So if ``version:target``
+is ``1.2`` and the last published build was ``1.2.4`` the next build created will
+become ``1.2.5``.
 
-   >>> make version
-
-* 0.1.1 -> 0.2.0 ::
-
-   >>> make version-minor
-
-* 0.2.0 -> 1.0.0 ::
-
-   >>> make version-major
-
-* 1.0.0 -> 0.0.0 ::
-
-   >>> make version-reset
+When a new major / minor version bump is desired, simply change the ``version:target``
+value, ie ``1.3`` or ``2.0``.
 
 3. Push:
 --------
@@ -323,14 +312,13 @@ will:
 
    * automatically run formatting and unit tests
    * if tests are passed, build and push your library to be available to other developers
-   * build new docs on Illuscio's readthedocs page
+   * build new docs and hosts them to an S3 bucket.
 
 4. Build:
 ---------
 
 islelib uses `Azure Pipelines`_ to automatically run builds, `Azure Artifacts`_ for
-private pypi package hosting, and `readthedocs`_ to host documentation through github
-webhooks.
+private pypi package hosting, and `Amazon S3`_ to host documentation as a static site.
 
 Link: Illuscio `Python Package Pipeline`_ dashboard
 Link: Illuscio `Python Azure Artifacts Feed`_
@@ -339,7 +327,7 @@ Link: Illuscio `readthedocs page`_
 Azure Builds
 ############
 
-Azure builds will only run on commits to the ``master`` branch or branches made with
+Azure builds will only run on commits to the ``dev`` branch or branches made with
 Pull Requests.
 
 When pushing to any applicable branch, Azure Pipelines will:
@@ -348,7 +336,7 @@ When pushing to any applicable branch, Azure Pipelines will:
    * Test the library in the above python versions on linux, mac, and windows using `pytest`_. Any failed tests will halt the build.
    * Check that test coverage exceeds 85%. If not, the build will fail.
 
-When pushing to the ``master`` branch, azure will do the above, then also:
+When pushing to the ``dev`` branch, azure will do the above, then also:
 
    * Build sdist and bdist_whl's through setuptools
    * Check that the version of library does not already exist in the `Python Azure Artifacts Feed`_. If it does, the build will fail.
@@ -357,12 +345,18 @@ When pushing to the ``master`` branch, azure will do the above, then also:
 All builds on azure also tag the github repository with their build number, so builds
 can be easily pulled.
 
-Readthedocs Builds
-##################
+Documentation Builds
+####################
 
-Whenever a new commit is made to the ``master`` branch, `readthedocs`_ will execute a
-new build of the documentation. This generation happens regardless of whether builds
-pass in Azure, something which should eventually be fixed.
+Whenever a new commit is made to the ``master`` branch, documentation is built as part
+of the pipeline and then pushed to an `Amazon S3`_ bucket for hosting. The documentation
+will be pushed to two locations:
+
+   * s3://{docs_bucket}/{repo_name}/latest
+   * s3://{docs_bucket}/{repo_name}/v{version}
+
+S3 can be configured to handle user authorization through `Cloudfront`_ and `Cognito`_
+using `this lambda edge template`_.
 
 .. _qol:
 
@@ -398,12 +392,11 @@ to do quick tests in this directory without accidentally causing a commit confli
 .. _Pep8: https://www.python.org/dev/peps/pep-0008/?
 .. _Black's: https://black.readthedocs.io/en/stable/
 .. _flake8: https://pypi.org/project/flake8/
-.. _Mypy: https://mypy.readthedocs.io/en/latest/
+.. _MyPy: https://mypy.readthedocs.io/en/latest/
 .. _autopep8: https://pypi.org/project/autopep8/
 .. _pytest: https://docs.pytest.org/en/latest/
 .. _Sphinx: http://www.sphinx-doc.org/en/master/
 .. _readthedocs: https://readthedocs.com/
-.. _bumpversion: https://github.com/peritus/bumpversion
 .. _Azure Pipelines: https://azure.microsoft.com/en-us/services/devops/pipelines/
 .. _PyPri: https://www.python-private-package-index.com/
 .. _Azure Artifacts: https://azure.microsoft.com/en-us/services/devops/artifacts/
@@ -411,3 +404,7 @@ to do quick tests in this directory without accidentally causing a commit confli
 .. _Python Package Pipeline: https://dev.azure.com/illuscio/Python%20Packages/_build?definitionId=1
 .. _readthedocs page: https://readthedocs.com/dashboard/
 .. _twine: https://twine.readthedocs.io/en/latest/
+.. _Amazon S3: https://aws.amazon.com/s3/
+.. _Cloudfront: https://aws.amazon.com/cloudfront/
+.. _Cognito: https://aws.amazon.com/cognito/
+.. _this lambda edge template: https://console.aws.amazon.com/lambda/home?region=us-east-1#/create/app?applicationId=arn:aws:serverlessrepo:us-east-1:520945424137:applications/cloudfront-authorization-at-edge

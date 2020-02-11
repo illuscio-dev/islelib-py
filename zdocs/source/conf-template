@@ -1,4 +1,13 @@
-from {lib-name-goes-here} import __version__
+import configparser
+import pathlib
+
+config_path = pathlib.Path(__file__).parent.parent.parent / "setup.cfg"
+config = configparser.ConfigParser()
+config.read(str(config_path))
+
+__version__ = config.get("version", "release")
+if not __version__:
+    __version__ = config.get("version", "target")
 
 # -*- coding: utf-8 -*-
 #
@@ -108,7 +117,7 @@ html_static_path = ["_static"]
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "{lib-name-goes-here}doc"
+htmlhelp_basename = "islelibdoc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -132,7 +141,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "{lib-name-goes-here}.tex", "{lib-name-goes-here} Documentation", "Billy PeAKE", "manual")
+    (master_doc, "islelib.tex", "islelib Documentation", "Billy Peake", "manual")
 ]
 
 
@@ -140,7 +149,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "{lib-name-goes-here}", "{lib-name-goes-here} Documentation", 1)]
+man_pages = [(master_doc, "islelib", "islelib Documentation", 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -151,9 +160,9 @@ man_pages = [(master_doc, "{lib-name-goes-here}", "{lib-name-goes-here} Document
 texinfo_documents = [
     (
         master_doc,
-        "{lib-name-goes-here}",
-        "{lib-name-goes-here} Documentation",
-        "{lib-name-goes-here}",
+        "islelib",
+        "islelib Documentation",
+        "islelib",
         "One line description of project.",
         "Miscellaneous",
     )
