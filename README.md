@@ -7,6 +7,10 @@ opposed to il-lib which would be phonetically sounded out as "ill".
 Islelib comes pre-built with a number of tools for formatting, linting and 
 testing.
 
+## Installation
+
+``pip install islelib``
+
 ## Getting Started
 For full documentation:
 [read the docs](https://illuscio-dev.github.io/islelib-py/).
