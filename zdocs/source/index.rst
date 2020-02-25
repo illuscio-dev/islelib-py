@@ -317,46 +317,9 @@ will:
 4. Build:
 ---------
 
-islelib uses `Azure Pipelines`_ to automatically run builds, `Azure Artifacts`_ for
-private pypi package hosting, and `Amazon S3`_ to host documentation as a static site.
+islelib uses `Azure Pipelines`_ to automatically run builds.
 
-Link: Illuscio `Python Package Pipeline`_ dashboard
-Link: Illuscio `Python Azure Artifacts Feed`_
-Link: Illuscio `readthedocs page`_
-
-Azure Builds
-############
-
-Azure builds will only run on commits to the ``dev`` branch or branches made with
-Pull Requests.
-
-When pushing to any applicable branch, Azure Pipelines will:
-
-   * Lint the library in python 3.6 and 3.7. If `black`_, `mypy`_ or `flake8`_ throw an error, the build will fail.
-   * Test the library in the above python versions on linux, mac, and windows using `pytest`_. Any failed tests will halt the build.
-   * Check that test coverage exceeds 85%. If not, the build will fail.
-
-When pushing to the ``dev`` branch, azure will do the above, then also:
-
-   * Build sdist and bdist_whl's through setuptools
-   * Check that the version of library does not already exist in the `Python Azure Artifacts Feed`_. If it does, the build will fail.
-   * Push these builds to illuscio's `Python Azure Artifacts Feed`_ using `twine`_.
-
-All builds on azure also tag the github repository with their build number, so builds
-can be easily pulled.
-
-Documentation Builds
-####################
-
-Whenever a new commit is made to the ``master`` branch, documentation is built as part
-of the pipeline and then pushed to an `Amazon S3`_ bucket for hosting. The documentation
-will be pushed to two locations:
-
-   * s3://{docs_bucket}/{repo_name}/latest
-   * s3://{docs_bucket}/{repo_name}/v{version}
-
-S3 can be configured to handle user authorization through `Cloudfront`_ and `Cognito`_
-using `this lambda edge template`_.
+For more information on azure builds, see the `azure build templates repo`_.
 
 .. _qol:
 
@@ -404,7 +367,4 @@ to do quick tests in this directory without accidentally causing a commit confli
 .. _Python Package Pipeline: https://dev.azure.com/illuscio/Python%20Packages/_build?definitionId=1
 .. _readthedocs page: https://readthedocs.com/dashboard/
 .. _twine: https://twine.readthedocs.io/en/latest/
-.. _Amazon S3: https://aws.amazon.com/s3/
-.. _Cloudfront: https://aws.amazon.com/cloudfront/
-.. _Cognito: https://aws.amazon.com/cognito/
-.. _this lambda edge template: https://console.aws.amazon.com/lambda/home?region=us-east-1#/create/app?applicationId=arn:aws:serverlessrepo:us-east-1:520945424137:applications/cloudfront-authorization-at-edge
+.. _azure build templates repo: https://github.com/illuscio-dev/azure-pipelines-templates
