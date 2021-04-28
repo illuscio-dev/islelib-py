@@ -24,10 +24,14 @@ pr:
 
 variables:
   # Link to the variables template.
-  - template: variables.yml@templates
+  - template: V2/variables.yml@templates
 
-jobs:
+# We extend the pipeline as a security feature.
+extends:
   # Link to the pipeline template.
-  - template: python_package_main.yml@templates
-    parameters:
-      publishToPypiOrg: true
+  template: V2/main.yml@templates
+  parameters:
+    language: PYTHON
+    buildType: LIBRARY
+    publishDocs: true
+    publishToPypiOrg: true
