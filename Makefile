@@ -9,7 +9,7 @@ install-dev:
 
 .PHONY: name
 name:
-	$(eval PATH_NEW := $(shell python3 ./zdevelop/make_scripts/make_name.py $(n)))
+	$(eval PATH_NEW := $(shell python3 ./zdevelop/make_scripts/py_make_name.py $(n)))
 	@echo "library renamed! to switch your current directory, use the following \
 	command:\ncd '$(PATH_NEW)'"
 
@@ -44,7 +44,7 @@ ifeq ($(py), )
 else
 	$(eval PY_PATH := $(py))
 endif
-	$(eval VENV_PATH := $(shell $(PY_PATH) ./zdevelop/make_scripts/make_venv.py))
+	$(eval VENV_PATH := $(shell $(PY_PATH) ./zdevelop/make_scripts/py_make_venv.py))
 	@echo "venv created! To enter virtual env, run:"
 	@echo ". ~/.bash_profile"
 	@echo "then run:"
