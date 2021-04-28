@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.144" timestamp="2021-04-28T22:13:14.908164" hostname="fv-az125-634"><testcase classname="zdevelop.tests.test_example" name="test_example" time="0.002" /></testsuite></testsuites>
